@@ -2,70 +2,71 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import shallowEqual from 'shallowequal';
-import RRadio from './RRadio';
+import InnerRadio from './InnerRadio';
 
 export default class Radio extends Component {
-	static propTypes = {
-		className: PropTypes.string,
-		style: PropTypes.object,
-		prefixCls: PropTypes.string
-	};
+    static propTypes = {
+        className: PropTypes.string,
+        style: PropTypes.object,
+        prefixCls: PropTypes.string
+    };
 
-	static defaultProps = {
-		prefixCls: 'nex-radio',
-		className: '',
-		style: {}
-	};
-	
-	static contextTypes = {
-		radioGroup: PropTypes.any,
-	};
-	
-	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		return !shallowEqual(this.props, nextProps) ||
-			   !shallowEqual(this.state, nextState) ||
-			   !shallowEqual(this.context.radioGroup, nextContext.radioGroup);
-	}
+    static defaultProps = {
+        prefixCls: 'rw-radio',
+        className: '',
+        style: {}
+    };
 
-	render() {
-		const {props, context} = this;
-		
-		const {
-			prefixCls,
-			className,
-			children,
-			style,
-			onMouseEnter,
-      		onMouseLeave,
-			...others
-		} = props;
+    static contextTypes = {
+        radioGroup: PropTypes.any,
+    };
 
-		const classString = classNames({
-			[`${prefixCls}-wrapper`]: true,
-			[className]: !!className
-		});
-		
-		const { radioGroup } = context;
-	
-		if (radioGroup) {
-			others.onChange = radioGroup.onChange;
-			others.checked = props.value+'' === radioGroup.value+'';
-			others.disabled = props.disabled || radioGroup.disabled;
-		}
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return !shallowEqual(this.props, nextProps) ||
+            !shallowEqual(this.state, nextState) ||
+            !shallowEqual(this.context.radioGroup, nextContext.radioGroup);
+    }
 
-		return (
-			<label 
-				className={classString} 
-				style={style}
-				onMouseEnter={onMouseEnter}
-        		onMouseLeave={onMouseLeave}
-			>
-				<RRadio
-					{...others}
-					prefixCls={prefixCls}
-				/>
-				{children !== undefined ? <span className={`${prefixCls}-label`}>{children}</span> : null}
-			</label>
-		);
-	}
+    render() {
+        const { props, context } = this;
+
+        const {
+            prefixCls,
+            className,
+            children,
+            style,
+            onMouseEnter,
+            onMouseLeave,
+            ...others
+        } = props;
+
+        const classString = classNames({
+            [`${prefixCls}-wrapper`]: true,
+            [className]: !!className
+        });
+
+        const { radioGroup } = context;
+
+        if (radioGroup) {
+            others.name = radioGroup.name;
+            others.onChange = radioGroup.onChange;
+            others.checked = props.value === radioGroup.value;
+            others.disabled = props.disabled || radioGroup.disabled;
+        }
+
+        return (
+            <label
+                className={classString}
+                style={style}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            >
+                <InnerRadio
+                    {...others}
+                    prefixCls={prefixCls}
+                />
+                {children !== undefined ? <span className={`${prefixCls}-label`}>{children}</span> : null}
+            </label>
+        );
+    }
 }
